@@ -7,6 +7,19 @@
 	<!-- A scenario to compliment the NDG Ethical Hacking labs -->
   <!-- https://www.netdevgroup.com/online/labs/ethical_hacking.html -->
 
+	<name>NDG Ethical Hacking Scenario</name>
+	<author>Jason Zeller</author>
+	<author>Michael Stainbrook</author>
+	<author>Chris Jacobs</author>
+
+	<description>
+		A scenario to compliment the NDG Ethical Hacking labs. For more information about the labs please see:
+		https://www.netdevgroup.com/online/labs/ethical_hacking.html
+	</description>
+
+	<type>ctf</type>
+	<difficulty>easy</difficulty>
+
 	<system>
 		<system_name>ndgeh</system_name>
 		<base platform="linux" type="server"/>
