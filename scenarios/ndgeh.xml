@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<scenario xmlns="http://www.github/cliffe/SecGen/scenario"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">
+
+	<!-- A scenario to compliment the NDG Ethical Hacking labs -->
+  <!-- https://www.netdevgroup.com/online/labs/ethical_hacking.html -->
+
+	<system>
+		<system_name>ndgeh</system_name>
+		<base platform="linux" type="server"/>
+
+		<network type="private_network" range="dhcp"/>
+	</system>
+
+</scenario>
