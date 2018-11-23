@@ -4,9 +4,6 @@
 	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">
 
-	<!-- A scenario to compliment the NDG Ethical Hacking labs -->
-  <!-- https://www.netdevgroup.com/online/labs/ethical_hacking.html -->
-
 	<name>NDG Ethical Hacking Scenario</name>
 	<author>Jason Zeller</author>
 	<author>Michael Stainbrook</author>
