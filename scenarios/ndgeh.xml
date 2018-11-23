@@ -21,6 +21,10 @@
 		<system_name>ndgeh</system_name>
 		<base platform="linux" type="server"/>
 
+		<service module_path="modules/services/unix/smb/samba"></service>
+
+		
+
 		<network type="private_network" range="dhcp"/>
 	</system>
 
