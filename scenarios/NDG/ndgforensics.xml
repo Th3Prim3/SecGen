@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<scenario xmlns="http://www.github/cliffe/SecGen/scenario"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">
+
+	<name>NDG Forensics Scenario</name>
+	<author>Jason Zeller</author>
+	<author>Michael Stainbrook</author>
+	<author>Chris Jacobs</author>
+
+	<description>
+		A scenario to compliment the NDG Forensics labs. For more information about the labs please see:
+		https://www.netdevgroup.com/content/cybersecurity/labs/ndg_forensics.html
+	</description>
+
+	<type>ctf</type>
+	<difficulty>easy</difficulty>
+
+	<system>
+		<system_name>ndgforensics</system_name>
+		<base platform="linux" type="server"/>
+
+		<!--Use jtr_crackable_user_account to add account to system -->
+    <vulnerability module_path=".*jtr_crackable_user_account.*">
+			<input into="leaked_filenames">
+				<value>flag_here</value>
+			</input>
+		</vulnerability>
+
+		<vulnerability module_path=".*shellshock_apache_cgi.*"/>
+
+		<!-- Cleanup system, and set root password of system -->
+		<build type="cleanup">
+      <input into="root_password">
+        <!-- <generator type=".*strong_password.*"/> -->
+				<value>Train1ng$</value>
+      </input>
+    </build>
+
+	</system>
+
+</scenario>

@@ -114,6 +114,9 @@ class XmlMarkerGenerator
           add_hint(clean_hint(solution), "#{search_module.unique_id}solution", "big_hint", xml)
         end
       when "generator"
+        if search_module.attributes['type'].include? 'jtr_password_generator'
+          add_hint("A flag can be found using the password of this account, replacing with the actual password in the example flag: flag{accountpassword}", "#{search_module.unique_id}jtr_password_generator", "normal", xml)
+        end
         if search_module.attributes['hint']
           search_module.attributes['hint'].each_with_index { |hint, i|
             add_hint(clean_hint(hint), "#{search_module.unique_id}hint#{i}", "big_hint", xml)

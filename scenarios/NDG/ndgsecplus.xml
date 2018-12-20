@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+
+<scenario xmlns="http://www.github/cliffe/SecGen/scenario"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">
+
+	<name>NDG Security+ v3 Scenario</name>
+	<author>Jason Zeller</author>
+	<author>Michael Stainbrook</author>
+	<author>Chris Jacobs</author>
+
+	<description>
+		A scenario to compliment the NDG Security+ v3 labs. For more information about the labs please see:
+		https://www.netdevgroup.com/content/cybersecurity/labs/ndg_security_plus.html
+	</description>
+
+	<type>ctf</type>
+	<difficulty>easy</difficulty>
+
+	<system>
+		<system_name>ndgsecplus</system_name>
+		<base platform="linux" type="server"/>
+
+		<!-- Generate System Accounts -->
+		<input into_datastore="accounts">
+
+			<!-- [0]: User 1, Entry account -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="medium_password_generator"/>
+        </input>
+      </generator>
+
+		</input>
+
+		<!-- Create users for Online Store database -->
+		<input into_datastore="people">
+
+			<!-- [0]: System User 1 -->
+			<generator type="person">
+        <input into="account">
+          <datastore access="0">accounts</datastore>
+        </input>
+      </generator>
+
+			<!-- [0]: Store User 1 -->
+			<generator type="person"/>
+			<!-- [1]: Store User 2 -->
+			<generator type="person"/>
+			<!-- [2]: Store User 3 -->
+			<generator type="person"/>
+		</input>
+
+		<!-- Online store data -->
+		<input into_datastore="store_domain">
+      <value>mysterytheory.org</value>
+    </input>
+
+		<!-- Use Parameterised Accounts to add accounts to system -->
+    <utility module_path=".*parameterised_accounts">
+      <!-- Use the 'accounts' database -->
+			<input into="accounts">
+				<datastore access="0">accounts</datastore>
+			</input>
+    </utility>
+
+		<!--Use jtr_crackable_user_account to add account to system -->
+    <vulnerability module_path=".*jtr_crackable_user_account.*">
+			<input into="leaked_filenames">
+				<value>flag_here</value>
+			</input>
+		</vulnerability>
+
+		<!-- Use "secretagent" vulnerability to allow SQL injection -->
+		<vulnerability module_path=".*secretagent.*">
+		  <!-- Use the 'people' database for input into secretagent database -->
+			<input into="accounts">
+				<datastore>people</datastore>
+			</input>
+			<input into="domain">
+				<datastore>store_domain</datastore>
+			</input>
+		</vulnerability>
+
+
+		<!-- Cleanup system, and set root password of system -->
+		<build type="cleanup">
+      <input into="root_password">
+        <!-- <generator type=".*strong_password.*"/> -->
+				<value>Train1ng$</value>
+      </input>
+    </build>
+
+	</system>
+
+</scenario>

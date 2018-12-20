@@ -1,0 +1,102 @@
+/* --------- Preview List --------- */
+
+div#preview_list {
+  display: inline-block;
+  position: absolute;
+
+  width: 28%;
+
+  top: 200;
+  margin: 0;
+  margin-right: 2%;
+
+  background-color: rgb(50, 66, 104);
+}
+
+div#preview_list ul {
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+}
+
+div#preview_list li {
+  width: 100%;
+
+  border-style: solid;
+  border-width: 1px;
+}
+
+div#preview_list li:hover {
+  border-color: #000000;
+
+  cursor: pointer;
+}
+
+div#preview_list li * {
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+  overflow: hidden;
+
+  margin: 0px;
+}
+
+li.preview {
+  border-color:  #111111;
+}
+
+li.marked_preview {
+  background-color: rgb(135, 138, 146);
+  border-color: #44386e;
+}
+
+#preview_list h3 {
+  color: #cccccc;
+}
+
+#preview_list h5 {
+  color: #cccccc;
+}
+
+#news h2{
+  color: #cccccc; 
+}
+
+#story_pane h1 {
+  color: #cccccc;
+}
+
+#story_pane h3 {
+  color: #cccccc;
+}
+
+#story_pane h4 {
+  color: #cccccc;
+}
+
+#story_pane p {
+  color: #cccccc;
+}
+
+/* --------- Story --------- */
+
+div#story_pane {
+  display: inline-block;
+
+  width: 70%;
+
+  margin: 0;
+  margin-left: 30%;
+}
+
+div#story_pane ul {
+  list-style: none;
+
+  margin: 0;
+  padding: 0;
+}
+
+li.hidden_story {
+  display: none;
+}

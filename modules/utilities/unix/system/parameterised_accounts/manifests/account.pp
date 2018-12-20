@@ -35,7 +35,8 @@ define parameterised_accounts::account($username, $password, $super_user, $strin
 
   if $password == '' {
     exec { "remove_password_from_account_$username":
-      command => "/usr/bin/passwd -d $username",
+      path    => ['/bin', '/usr/bin', '/usr/local/bin', '/sbin', '/usr/sbin'],
+      command => "echo $username:U6aMy0wojraho | chpasswd -e",
       require => Accounts::User[$username],
     }
   }

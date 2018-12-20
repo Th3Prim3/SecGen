@@ -1,0 +1,163 @@
+<?xml version="1.0"?>
+
+<scenario xmlns="http://www.github/cliffe/SecGen/scenario"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">
+
+	<name>NDG Ethical Hacking Scenario</name>
+	<author>Jason Zeller</author>
+	<author>Michael Stainbrook</author>
+	<author>Chris Jacobs</author>
+
+	<description>
+		A scenario to compliment the NDG Ethical Hacking labs. For more information about the labs please see:
+		https://www.netdevgroup.com/online/labs/ethical_hacking.html
+	</description>
+
+	<type>ctf</type>
+	<difficulty>easy</difficulty>
+
+	<system>
+		<system_name>ndgeh</system_name>
+		<base platform="linux" type="server"/>
+
+		<!-- Generate System Accounts -->
+		<input into_datastore="accounts">
+
+			<!-- [0]: User 1, Entry account -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="medium_password_generator"/>
+        </input>
+      </generator>
+
+			<!-- [1]: User 2, Entry account 2 -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="strong_password_generator"/>
+        </input>
+				<input into="super_user">
+					<value>true</value>
+				</input>
+      </generator>
+
+			<!-- [2]: User 3, Entry account -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="medium_password_generator"/>
+        </input>
+      </generator>
+
+		</input>
+
+		<!-- Create users for Online Store database -->
+		<input into_datastore="people">
+
+			<!-- [0]: System User 1 -->
+			<generator type="person">
+        <input into="account">
+          <datastore access="0">accounts</datastore>
+        </input>
+      </generator>
+			<!-- [0]: Store User 1 -->
+			<generator type="person"/>
+			<!-- [0]: System User 2 -->
+			<generator type="person">
+        <input into="account">
+          <datastore access="2">accounts</datastore>
+        </input>
+      </generator>
+			<!-- [0]: Store User 2 -->
+			<generator type="person"/>
+			<!-- [0]: System User 3 -->
+			<generator type="person">
+        <input into="account">
+          <datastore access="1">accounts</datastore>
+        </input>
+      </generator>
+			<!-- [0]: Store User 3 -->
+			<generator type="person"/>
+		</input>
+
+		<!-- Online store data -->
+		<input into_datastore="store_domain">
+      <value>intech.com</value>
+    </input>
+
+
+
+
+		<!-- Use Parameterised Accounts to add accounts to system -->
+    <utility module_path=".*parameterised_accounts">
+      <!-- Use the 'accounts' database -->
+			<input into="accounts">
+				<datastore access="0">accounts</datastore>
+				<datastore access="1">accounts</datastore>
+				<datastore access="2">accounts</datastore>
+			</input>
+    </utility>
+
+		<!--Use jtr_crackable_user_account to add account to system -->
+    <vulnerability module_path=".*jtr_crackable_user_account.*">
+			<input into="leaked_filenames">
+				<value>flag_here</value>
+			</input>
+			<input into="strings_to_leak">
+				<generator type="flag_generator"/>
+				<value>I wonder if you can figure out my password. It is also a flag in the example form of: flag{mypassword}</value>
+				<value>Here is a flag for your troubles.</value>
+			</input>
+		</vulnerability>
+
+		<vulnerability module_path=".*hidden_file">
+      <input into="account">
+        <datastore access="0">accounts</datastore>
+      </input>
+      <input into="leaked_filenames">
+				<value>lookylooky</value>
+			</input>
+			<input into="strings_to_leak">
+        <generator type="flag_generator"/>
+        <value>Make a note of the technique used to solve this challenge as it will come in handy again soon.</value>
+      </input>
+    </vulnerability>
+
+		<!-- Use "officesupplystore" vulnerability to allow SQL injection -->
+		<vulnerability module_path=".*officesupplystore.*">
+		  <!-- Use the 'people' database for input into officesupply database -->
+			<input into="accounts">
+				<datastore>people</datastore>
+			</input>
+			<input into="domain">
+				<datastore>store_domain</datastore>
+			</input>
+		</vulnerability>
+
+		<!-- Cleanup system, and set root password of system -->
+		<build type="cleanup">
+      <input into="root_password">
+        <generator type=".*strong_password.*"/>
+      </input>
+    </build>
+
+	</system>
+
+</scenario>
