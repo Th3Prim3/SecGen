@@ -14,20 +14,85 @@ class PcapGenerator < StringEncoder
     self.strings_to_leak = []
   end
 
-  def encode_all
-    # Create an array of packets
-    @pcaps = []
-    data = self.strings_to_leak.join("\n")
-    pkt = PacketFu::TCPPacket.new
+  def packetgen(type, data)
+    if type == 'tcp'
+        # Create TCP Packet
+        pkt = PacketFu::TCPPacket.new
+        pkt.tcp_dst=rand(1..1023)
+    elsif type == 'udp'
+        # Create UDP Packet
+        pkt = PacketFu::UDPPacket.new
+        pkt.udp_dst=rand(1..1023)
+    end
     # Create fake mac addresses for sender and receiver
     pkt.eth_saddr=Faker::Internet.mac_address
     pkt.eth_daddr=Faker::Internet.mac_address
     # Create fake Public IP addresses for sender and receiver
-    pkt.ip_src=PacketFu::Octets.new.read_quad(Faker::Internet.public_ip_v4_address)
-    pkt.ip_dst=PacketFu::Octets.new.read_quad(Faker::Internet.public_ip_v4_address)
+    pkt.ip_src=PacketFu::Octets.new.read_quad(Faker::Internet.ip_v4_address)
+    pkt.ip_dst=PacketFu::Octets.new.read_quad(Faker::Internet.ip_v4_address)
     pkt.payload = data
     pkt.recalc
+  end
+
+  def datagen
+    data_types = [
+        Faker::Dota.quote,
+        Faker::BackToTheFuture.quote,
+        Faker::BojackHorseman.quote,
+        Faker::ChuckNorris.fact,
+        Faker::DrWho.quote,
+        Faker::DumbAndDumber.quote,
+        Faker::FamilyGuy.quote,
+        Faker::Friends.quote,
+        Faker::GameOfThrones.quote,
+        Faker::HitchhikersGuideToTheGalaxy.quote,
+        Faker::HowIMetYourMother.quote,
+        Faker::Lebowski.quote,
+        Faker::MostInterestingManInTheWorld.quote,
+        Faker::RickAndMorty.quote,
+        Faker::Simpsons.quote,
+        Faker::StrangerThings.quote,
+        Faker::TheITCrowd.quote
+    ]
+    data_types.sample.dump.to_s
+  end
+
+  def encode_all
+    # Create an array of packets
+    random_number = rand (26..75)
+    count = 0
+    @pcaps = []
+
+    # Generate 25 initial packets
+    25.times do
+        packet_type = ['tcp', 'udp'].sample
+        pkt = packetgen(packet_type, datagen)
+        @pcaps << pkt
+        count += 1
+    end
+
+    # Now generate random packets till we get to our random_number
+    while count < random_number
+        packet_type = ['tcp', 'udp'].sample
+        pkt = packetgen(packet_type, datagen)
+        @pcaps << pkt
+        count += 1
+    end
+
+    # Now add our strings_to_leak packet
+    strings = self.strings_to_leak.join("\n")
+    pkt = packetgen(packet_type, strings)
     @pcaps << pkt
+    count += 1
+
+    # Finish generating packets till we have 100
+    while count < 101
+        packet_type = ['tcp', 'udp'].sample
+        pkt = packetgen(packet_type, datagen)
+        @pcaps << pkt
+        count += 1
+    end
+    # Put packets in pcap file and return contents.
     file_contents = ''
     pfile = PacketFu::PcapFile.new
     pcap_file_path = GENERATORS_DIR + 'network/pcap/files/packet.pcap'

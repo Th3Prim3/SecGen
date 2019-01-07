@@ -203,6 +203,9 @@
 			</input>
 		</vulnerability>
 
+		<!-- Release pcap file -->
+		<vulnerability type="pcap"/>
+
 		<!-- Create non-vagrant network -->
 		<network module_path=".*private_network_1"/>
 
