@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+
+<scenario xmlns="http://www.github/cliffe/SecGen/scenario"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">
+
+	<name>NDG Ethical Hacking Scenario</name>
+	<author>Jason Zeller</author>
+	<author>Michael Stainbrook</author>
+	<author>Chris Jacobs</author>
+
+	<description>
+		A scenario to compliment the NDG Ethical Hacking labs. For more information about the labs please see:
+		https://www.netdevgroup.com/online/labs/ethical_hacking.html
+	</description>
+
+	<type>ctf</type>
+	<difficulty>easy</difficulty>
+
+	<system>
+		<system_name>ndgeh</system_name>
+		<base platform="linux" type="server"/>
+
+		<!-- Generate System Accounts -->
+		<!--<input into_datastore="accounts">-->
+
+			<!-- [0]: User 1, Entry account -->
+			<!--<generator type="account">-->
+        <!--<input into="leaked_filenames">-->
+					<!--<value>test.pcap</value>-->
+        <!--</input>-->
+        <!--<input into="strings_to_leak">-->
+          <!--<generator type="pcap_generator"/>-->
+				<!--</input>-->
+        <!--<input into="password">-->
+          <!--<generator type="medium_password_generator"/>-->
+        <!--</input>-->
+      <!--</generator>-->
+    <!--</input>-->
+
+		<!-- Use Parameterised Accounts to add accounts to system -->
+    <!--<utility module_path=".*parameterised_accounts">-->
+      <!--&lt;!&ndash; Use the 'accounts' database &ndash;&gt;-->
+			<!--<input into="accounts">-->
+				<!--<datastore access="0">accounts</datastore>-->
+			<!--</input>-->
+    <!--</utility>-->
+
+		<vulnerability type="pcap"/>
+
+		<!-- Cleanup system, and set root password of system -->
+		<build type="cleanup">
+      <input into="root_password">
+        <value>Train1ng$</value>
+      </input>
+    </build>
+
+	</system>
+
+</scenario>

@@ -115,15 +115,31 @@
 			</input>
     </utility>
 
+		<!-- Generate jtr_password for use with vulnerability and flag{password} release -->
+		<input into_datastore="jtr_password">
+			<generator type="jtr_password"/>
+		</input>
+
 		<!--Use jtr_crackable_user_account to add account to system -->
     <vulnerability module_path=".*jtr_crackable_user_account.*">
+			<input into="password">
+				<datastore access="0">jtr_password</datastore>
+			</input>
+			<input into="flag_password">
+				<generator type="concat_flag_generator">
+      		<input into="strings_to_join">
+						<datastore access="0">jtr_password</datastore>
+					</input>
+				</generator>
+			</input>
 			<input into="leaked_filenames">
 				<value>flag_here</value>
 			</input>
 			<input into="strings_to_leak">
+				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
+				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
+				<value>Here is a flag for finding this message:</value>
 				<generator type="flag_generator"/>
-				<value>I wonder if you can figure out my password. It is also a flag in the example form of: flag{mypassword}</value>
-				<value>Here is a flag for your troubles.</value>
 			</input>
 		</vulnerability>
 
@@ -150,6 +166,8 @@
 				<datastore>store_domain</datastore>
 			</input>
 		</vulnerability>
+
+		<network module_path=".*private_network_1"/>
 
 		<!-- Cleanup system, and set root password of system -->
 		<build type="cleanup">

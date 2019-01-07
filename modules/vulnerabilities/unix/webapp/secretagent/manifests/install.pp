@@ -8,6 +8,7 @@ class secretagent::install {
   $accounts = $secgen_parameters['accounts']
   $domain = $secgen_parameters['domain'][0]
   $db_password = $secgen_parameters['db_password'][0]
+  $agents = $secgen_parameters['agents']
 
   $docroot = '/var/www/secretagent'
   $db_username = 'secretagent'

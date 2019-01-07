@@ -114,6 +114,7 @@
   <hint>The authors of this website forgot to sanitise their database inputs!</hint>
   <hint>The product page's filter form is vulnerable to SQL injection attacks.</hint>
   <hint>There are automated tools, such as sqlmap, that will probe database through the web application and retrieve the data.</hint>
+  <hint>You will need escalated privileges for some flags.</hint>
   <solution>You can dump the database with the following command: 'sqlmap --url=http://url:port/product.php?filter=* --dump' and follow the instructions when prompted.</solution>
 
   <!-- TODO: confict w/ Stretch/Kali as it uses php5 mysql_connect() function. Needs refactor to use PHP PDO. -->

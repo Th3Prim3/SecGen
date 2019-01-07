@@ -20,6 +20,7 @@
   <read_fact>additional_pages</read_fact>
   <read_fact>additional_page_filenames</read_fact>
 
+
   <!-- Team Project markers, generate and host an acceptable use policy on a basic website. -->
   <read_fact>host_acceptable_use_policy</read_fact>
   <read_fact>security_audit</read_fact>
@@ -30,6 +31,9 @@
 
   <read_fact>port</read_fact>
   <read_fact>theme</read_fact>
+
+  <!-- Allows you to set mode of images_to_leak -->
+  <read_fact>images_mode</read_fact>
 
   <default_input into="port">
     <value>80</value>

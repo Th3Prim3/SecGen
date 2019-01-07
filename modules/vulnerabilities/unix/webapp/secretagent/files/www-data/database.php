@@ -16,7 +16,7 @@
 
   // are we looking at anything in particular?
   if(isset($_GET['id'])) {
-    // request only the product
+    // request only the agent
     $sql .= " AND p.id=".mysql_real_escape_string($_GET['id']);
   // are we searching?
   } else if(isset($_GET['filter']) and !empty($_GET['filter'])) {
@@ -148,7 +148,22 @@
             </tbody>
           <?php endif; ?>
         </table>
+      <?php } else { ?>
+        <br />
+        <p class="pull-right"><a href="./database.php"><small>Back to database</small></a></p>
+        <br />
+        <hr style="clear: both" />
+        <h2>Suspected Handle:</h2>
+        <p><?php echo(htmlentities($agents[0]['username'])); ?></p>
+        <h2>Secret Code Response:</h2>
+        <p><?php echo(htmlentities($agents[0]['password'])); ?></p>
+        <h2>Last Known Address:</h2>
+        <p><?php echo(htmlentities($agents[0]['address'])); ?></p>
+
       <?php } ?>
+
+
+
     </div> <!-- /container -->
 
     <script type="text/javascript" charset="utf8" src="/js/jquery-2.1.2.min.js"></script>

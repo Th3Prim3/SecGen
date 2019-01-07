@@ -33,6 +33,7 @@ class parameterised_website::install {
 
   $strings_to_leak = $secgen_parameters['strings_to_leak']
   $images_to_leak = $secgen_parameters['images_to_leak']
+  $images_mode = $secgen_parameters['images_mode']
 
   $security_audit = $secgen_parameters['security_audit']
   $acceptable_use_policy = str2bool($secgen_parameters['host_acceptable_use_policy'][0])
@@ -42,11 +43,13 @@ class parameterised_website::install {
 
   $white_text = $secgen_parameters['white_text']
 
-  if $intro_paragraph != '' {
-    $main_page_paragraph_content = $intro_paragraph
-  } else {
-    $main_page_paragraph_content = $secgen_parameters['main_page_paragraph_content']
-  }
+  # if $intro_paragraph != [] {
+  #   $main_page_paragraph_content = $intro_paragraph
+  # } else {
+  #   $main_page_paragraph_content = $secgen_parameters['main_page_paragraph_content']
+  # }
+
+  $main_page_paragraph_content = $secgen_parameters['main_page_paragraph_content']
 
   # Additional Pages
   $additional_pages = $secgen_parameters['additional_pages']
@@ -138,10 +141,19 @@ class parameterised_website::install {
   }
 
   if $images_to_leak {
-    ::secgen_functions::leak_files{ 'parameterised_website-image-leak':
-      storage_directory => $docroot,
-      images_to_leak => $images_to_leak,
-      leaked_from => "parameterised_website",
+    if $images_mode {
+      ::secgen_functions::leak_files { 'parameterised_website-image-leak-mode':
+        storage_directory => $docroot,
+        images_to_leak    => $images_to_leak,
+        mode              => $images_mode,
+        leaked_from       => "parameterised_website",
+      }
+    } else {
+      ::secgen_functions::leak_files { 'parameterised_website-image-leak':
+        storage_directory => $docroot,
+        images_to_leak    => $images_to_leak,
+        leaked_from       => "parameterised_website",
+      }
     }
   }
 

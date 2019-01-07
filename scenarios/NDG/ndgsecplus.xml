@@ -24,7 +24,7 @@
 		<!-- Generate System Accounts -->
 		<input into_datastore="accounts">
 
-			<!-- [0]: User 1, Entry account -->
+			<!-- [0]: User 1, Basic Entry account -->
 			<generator type="account">
         <input into="leaked_filenames">
           <value/>
@@ -33,49 +33,87 @@
           <value/>
 				</input>
         <input into="password">
-          <generator type="medium_password_generator"/>
+          <generator type="weak_password_generator"/>
         </input>
+      </generator>
+
+			<!-- [1]: User 2, Basic Entry account 2 -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="strong_password_generator"/>
+        </input>
+      </generator>
+
+			<!-- [2]: User 3, Superuser account -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="strong_password_generator"/>
+        </input>
+				<input into="super_user">
+					<value>true</value>
+				</input>
       </generator>
 
 		</input>
 
-		<!-- Create users for Online Store database -->
+		<!-- Create users for secret agent users table -->
 		<input into_datastore="people">
 
-			<!-- [0]: System User 1 -->
+			<!-- [0]: Basic Entry system account -->
 			<generator type="person">
         <input into="account">
           <datastore access="0">accounts</datastore>
         </input>
       </generator>
-
-			<!-- [0]: Store User 1 -->
+			<!-- [1]: User 1 -->
 			<generator type="person"/>
-			<!-- [1]: Store User 2 -->
+			<!-- [2]: User 2 -->
 			<generator type="person"/>
-			<!-- [2]: Store User 3 -->
+			<!-- [3]: Basic Entry system account 2-->
+			<generator type="person">
+        <input into="account">
+          <datastore access="1">accounts</datastore>
+        </input>
+      </generator>
+			<!-- [4]: Store User 2 -->
+			<generator type="person"/>
+			<!-- [5]: Store User 3 -->
 			<generator type="person"/>
 		</input>
+
+		<!-- Create users for secret agent users table -->
+		<input into_datastore="agents">
+			<!-- Agent 1 -->
+			<generator type="person"/>
+			<!-- Agent 2 -->
+			<generator type="person"/>
+			<!-- Agent 3 (Superuser) -->
+			<generator type="person">
+        <input into="account">
+          <datastore access="2">accounts</datastore>
+        </input>
+      </generator>
+		</input>
+
+
+
 
 		<!-- Online store data -->
 		<input into_datastore="store_domain">
       <value>mysterytheory.org</value>
     </input>
-
-		<!-- Use Parameterised Accounts to add accounts to system -->
-    <utility module_path=".*parameterised_accounts">
-      <!-- Use the 'accounts' database -->
-			<input into="accounts">
-				<datastore access="0">accounts</datastore>
-			</input>
-    </utility>
-
-		<!--Use jtr_crackable_user_account to add account to system -->
-    <vulnerability module_path=".*jtr_crackable_user_account.*">
-			<input into="leaked_filenames">
-				<value>flag_here</value>
-			</input>
-		</vulnerability>
 
 		<!-- Use "secretagent" vulnerability to allow SQL injection -->
 		<vulnerability module_path=".*secretagent.*">
@@ -86,8 +124,87 @@
 			<input into="domain">
 				<datastore>store_domain</datastore>
 			</input>
+			<input into="agents">
+				<datastore>agents</datastore>
+			</input>
 		</vulnerability>
 
+
+		<!-- Use Parameterised Accounts to create system accounts -->
+    <utility module_path=".*parameterised_accounts">
+      <!-- Use the 'accounts' database -->
+			<input into="accounts">
+				<datastore access="0">accounts</datastore>
+				<datastore access="1">accounts</datastore>
+				<datastore access="2">accounts</datastore>
+			</input>
+    </utility>
+
+		<!-- Generate ncrack_password for use with vulnerability and flag{password} release -->
+		<input into_datastore="ncrack_password">
+			<generator type="ncrack_password"/>
+		</input>
+
+		<!--Use ncrack_crackable_user_account to add account to system -->
+    <vulnerability module_path=".*ncrack_user_account.*">
+			<input into="password">
+				<datastore access="0">ncrack_password</datastore>
+			</input>
+			<input into="flag_password">
+				<generator type="concat_flag_generator">
+      		<input into="strings_to_join">
+						<datastore access="0">ncrack_password</datastore>
+					</input>
+				</generator>
+			</input>
+			<input into="leaked_filenames">
+				<value>flag_here</value>
+			</input>
+			<input into="strings_to_leak">
+				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
+				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
+				<value>Here is a flag for finding this message:</value>
+				<generator type="flag_generator"/>
+			</input>
+			<input into="account">
+				<generator type="account">
+					<input into="username">
+						<value>guest</value>
+					</input>
+				</generator>
+			</input>
+		</vulnerability>
+
+		<!-- Generate jtr_password for use with vulnerability and flag{password} release -->
+		<input into_datastore="jtr_password">
+			<generator type="jtr_password"/>
+		</input>
+
+		<!--Use jtr_crackable_user_account to add account to system -->
+    <vulnerability module_path=".*jtr_crackable_user_account.*">
+			<input into="password">
+				<datastore access="0">jtr_password</datastore>
+			</input>
+			<input into="flag_password">
+				<generator type="concat_flag_generator">
+      		<input into="strings_to_join">
+						<datastore access="0">jtr_password</datastore>
+					</input>
+				</generator>
+			</input>
+			<input into="leaked_filenames">
+				<value>flag_here</value>
+			</input>
+			<input into="strings_to_leak">
+				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
+				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
+				<value>Here is a flag for finding this message:</value>
+				<generator type="flag_generator"/>
+			</input>
+		</vulnerability>
+
+		<!-- Create non-vagrant network -->
+		<network module_path=".*private_network_1"/>
 
 		<!-- Cleanup system, and set root password of system -->
 		<build type="cleanup">
