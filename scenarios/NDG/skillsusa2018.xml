@@ -1,0 +1,394 @@
+<?xml version="1.0"?>
+
+<scenario xmlns="http://www.github/cliffe/SecGen/scenario"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.github/cliffe/SecGen/scenario">
+
+	<name>SkillsUSA 2018 Scenario</name>
+	<author>Jason Zeller</author>
+	<author>Michael Stainbrook</author>
+	<author>Chris Jacobs</author>
+
+	<description>
+		A scenario for the 2018 SkillsUSA competition.
+	</description>
+
+	<type>ctf</type>
+	<difficulty>easy</difficulty>
+
+	<system>
+		<system_name>skillsserver</system_name>
+		<base platform="linux" type="server"/>
+
+		<!-- Generate System Accounts -->
+		<input into_datastore="accounts">
+
+			<!-- [0]: User 1, Basic Entry account -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="weak_password_generator"/>
+        </input>
+      </generator>
+
+			<!-- [1]: User 2, Basic Entry account 2 -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="strong_password_generator"/>
+        </input>
+      </generator>
+
+			<!-- [2]: User 3, Superuser account -->
+			<generator type="account">
+        <input into="leaked_filenames">
+          <value/>
+        </input>
+        <input into="strings_to_leak">
+          <value/>
+				</input>
+        <input into="password">
+          <generator type="strong_password_generator"/>
+        </input>
+				<input into="super_user">
+					<value>true</value>
+				</input>
+      </generator>
+
+		</input>
+
+		<!-- Create users for users table -->
+		<input into_datastore="people">
+
+			<!-- [0]: Basic Entry system account -->
+			<generator type="person">
+        <input into="account">
+          <datastore access="0">accounts</datastore>
+        </input>
+      </generator>
+			<!-- [1]: User 1 -->
+			<generator type="person"/>
+			<!-- [2]: User 2 -->
+			<generator type="person"/>
+			<!-- [3]: Basic Entry system account 2-->
+			<generator type="person">
+        <input into="account">
+          <datastore access="1">accounts</datastore>
+        </input>
+      </generator>
+			<!-- [4]: Store User 2 -->
+			<generator type="person"/>
+			<!-- [5]: Store User 3 -->
+			<generator type="person"/>
+			<generator type="person">
+        <input into="account">
+          <datastore access="2">accounts</datastore>
+        </input>
+      </generator>
+		</input>
+
+		<!-- Online store data -->
+		<input into_datastore="store_domain">
+      <value>pwnablepwnies.hackers</value>
+    </input>
+
+		<!-- Use "pwnyonlinestore" vulnerability to allow SQL injection -->
+		<vulnerability module_path=".*pwnyonlinestore.*">
+		  <!-- Use the 'people' database for input into pwny database -->
+			<input into="accounts">
+				<datastore>people</datastore>
+			</input>
+			<input into="domain">
+				<datastore>store_domain</datastore>
+			</input>
+			<input into="port">
+				<value>1337</value>
+			</input>
+			<input into="strings_to_leak">
+				<generator type="netlab_flag"/>
+				<generator type="netlab_flag"/>
+				<generator type="netlab_flag"/>
+			</input>
+		</vulnerability>
+
+		<service name="Random Parameterised Website">
+
+			<input into="theme">
+				<value>pony.min.css</value>
+			</input>
+
+			<input into="white_text">
+				<generator type="netlab_flag"/>
+				<value>Good work!</value>
+			</input>
+
+			<input into="images_to_leak" unique_module_list="unique_encoders">
+				<generator type="hidden_data_in_image_file">
+					<input into="base64_image">
+						<generator type="scenario_image_generator"/>
+					</input>
+					<input into="strings_to_leak">
+						<generator type="netlab_flag"/>
+						<value>YOU HAVE FOUND OUR SECRET MESSAGE! Congrats! We have provided you with an username and password to a client system on the internal network. </value>
+ 						<value>Username: bojackson </value>
+						<value>Password: notyourseabiscuit </value>
+						<value>We trust you will use this information wisely. Below is a flag for you: </value>
+					</input>
+				</generator>
+			</input>
+
+			<input into="images_mode">
+				<value>777</value>
+			</input>
+
+			<input into="organisation">
+				<generator type="random_organisation">
+					<input into="business_name">
+						<value>Pwnable Pwnies</value>
+					</input>
+					<input into="business_motto">
+						<value>Changing the world, one image at a time</value>
+					</input>
+					<input into="domain">
+						<value>pwnablepwnies.hackers</value>
+					</input>
+					<input into="industry">
+						<value>Hacker's Extraordinaire</value>
+					</input>
+					<input into="intro_paragraph">
+						<value/>
+					</input>
+				</generator>
+			</input>
+
+			<input into="main_page_paragraph_content">
+				<generator type="html_snippet_generator">
+          <input into="heading">
+            <value>We need your help!</value>
+          </input>
+          <input into="paragraphs" unique_module_list="unique_encoders">
+            <value>Pony images are one with the Internet and the Internet is one with pony images. The Pwnable Pwnies have sat by and watched as cat gifs and images have taken over the Internet. We shall sit and watch no more. Cat gifs and memes have sent the internet into a crisis. Their recent rise in fame has overshadowed pony images. We will bring pony images back to the front lines of the internet by any means necessary. The Pwnable Pwnies are fighting in the fields to create a more stable internet viewing experience for all.</value>
+						<value>The Pwnable Pwnies welcome all. Explore the site, read our information, get off your high horse and join our cause. Some may call us extremists. Others may call us radicals. We simply call ourselves the Pwnable Pwnies. We are a group of like minded Internet warriors, battling in the trenches. Do you part for our cause by sharing pony images everywhere. Let's start a revolution. Rein in your sharing of cat GIFs, pony images are the way of the future. Unsaddle yourself from the expectations of a cat minded Internet. Hoof up your pony image sharing.</value>
+						<value>Those who are with us, look for clues on this website. Remember, our logo is everything to us!</value>
+          </input>
+        </generator>
+
+				<generator type="html_snippet_generator">
+          <input into="heading">
+            <value>Secret Message 1:</value>
+          </input>
+          <input into="paragraphs" unique_module_list="unique_encoders">
+            <encoder name="BASE64 Encoder">
+							<input into="strings_to_encode">
+								<generator type="netlab_flag"/>
+								<value>Congrats, BASE64 is correct! Here is a flag for you: </value>
+							</input>
+						</encoder>
+          </input>
+        </generator>
+
+				<generator type="html_snippet_generator">
+          <input into="heading">
+            <value>Secret Message 2:</value>
+          </input>
+          <input into="paragraphs" unique_module_list="unique_encoders">
+            <encoder name="Hexadecimal Encoder">
+							<input into="strings_to_encode">
+								<generator type="netlab_flag"/>
+								<value>We put a "HEX" on you! Here is a flag for you: </value>
+							</input>
+						</encoder>
+          </input>
+        </generator>
+			</input>
+
+		</service>
+
+
+
+		<!-- Use Parameterised Accounts to create system accounts -->
+    <utility module_path=".*parameterised_accounts">
+      <!-- Use the 'accounts' database -->
+			<input into="accounts">
+				<datastore access="0">accounts</datastore>
+				<datastore access="1">accounts</datastore>
+				<datastore access="2">accounts</datastore>
+			</input>
+    </utility>
+
+		<!-- Generate ncrack_password for use with vulnerability and flag{password} release -->
+		<input into_datastore="ncrack_password">
+			<generator type="ncrack_password"/>
+		</input>
+
+		<!--Use ncrack_crackable_user_account to add account to system -->
+    <vulnerability module_path=".*ncrack_user_account.*">
+			<input into="password">
+				<datastore access="0">ncrack_password</datastore>
+			</input>
+			<input into="flag_password">
+				<generator type="concat_flag_generator">
+      		<input into="strings_to_join">
+						<datastore access="0">ncrack_password</datastore>
+					</input>
+				</generator>
+			</input>
+			<input into="leaked_filenames">
+				<value>flag_here</value>
+			</input>
+			<input into="strings_to_leak">
+				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
+				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
+				<value>Here is a flag for finding this message:</value>
+				<generator type="netlab_flag"/>
+			</input>
+			<input into="account">
+				<generator type="account">
+					<input into="username">
+						<value>guest</value>
+					</input>
+				</generator>
+			</input>
+		</vulnerability>
+
+		<!-- Generate jtr_password for use with vulnerability and flag{password} release -->
+		<input into_datastore="jtr_password">
+			<generator type="jtr_password"/>
+		</input>
+
+		<!--Use jtr_crackable_user_account to add account to system -->
+    <vulnerability module_path=".*jtr_crackable_user_account.*">
+			<input into="password">
+				<datastore access="0">jtr_password</datastore>
+			</input>
+			<input into="flag_password">
+				<generator type="concat_flag_generator">
+      		<input into="strings_to_join">
+						<datastore access="0">jtr_password</datastore>
+					</input>
+				</generator>
+			</input>
+			<input into="leaked_filenames">
+				<value>flag_here</value>
+			</input>
+			<input into="strings_to_leak">
+				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
+				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
+				<value>Here is a flag for finding this message:</value>
+				<generator type="netlab_flag"/>
+			</input>
+		</vulnerability>
+
+		<!-- Create non-vagrant network -->
+		<network module_path=".*private_network_1"/>
+		<network module_path=".*private_network_4"/>
+
+		<!-- Cleanup system, and set root password of system -->
+		<build type="cleanup">
+      <input into="root_password">
+        <generator type=".*strong_password.*"/>
+      </input>
+    </build>
+
+	</system>
+
+	<system>
+		<system_name>skillsclient</system_name>
+		<base module_path="modules/bases/debian_puppet_32" name="Debian 7 Wheezy Server" author="Z\. Cliffe Schreuders" module_license="GPLv3" description="Based on the Official Puppet Vagrant box\. Debian 7\.8 \(wheezy\) 32\-bit \(i386\), Puppet 4\.3\.2 / Puppet Enterprise 2015\.3\.2 \(agent\)\.\n    This is the primary base box used during development\. For testing purposes, the default root password is puppet\." cpu_word_size="32\-bit" type="server|cli" platform="linux|unix" distro="Debian 7\.8 \(wheezy\) 32\-bit \(i386\)" url="https://app\.vagrantup\.com/secgen/boxes/debian_wheezy_puppet/versions/1\.0\.0/providers/virtualbox\.box" ovirt_template="debian_server" reference="https://atlas\.hashicorp\.com/puppetlabs" software_license="various"/>
+
+		<!-- Generate System Accounts -->
+		<input into_datastore="accounts">
+			<!-- System Account -->
+			<generator type="account">
+				<input into="username">
+					<value>bojackson</value>
+				</input>
+				<input into="password">
+					<value>notyourseabiscuit</value>
+				</input>
+				<input into="leaked_filenames">
+					<value>welcome.txt</value>
+				</input>
+				<input into="strings_to_leak">
+					<value>Welcome! We shall call you Secretariat, as you are a wonderful hacker. Feel free to look around. Remember, we are a secret organization and like to hide our data in hidden files or buried in seemingly nonsuspicious files.
+					</value>
+				</input>
+			</generator>
+		</input>
+
+		<!-- Use Parameterised Accounts to create system accounts -->
+    <utility module_path=".*parameterised_accounts">
+      <!-- Use the 'accounts' database -->
+			<input into="accounts">
+				<datastore access="3">accounts</datastore>
+			</input>
+    </utility>
+
+
+		<!-- Release pcap file -->
+		<vulnerability type="pcap">
+			<input into="base64_file">
+				<generator type="pcap_generator">
+					<input into="strings_to_leak">
+						<generator type="netlab_flag"/>
+						<value>
+							******SECRET*******From now on, make sure that all network traffic is properly encrypted. The script for the technology was almost transmitted in clear text. Remember, we like to store other information in password protected zip files.******SECRET*******
+						</value>
+					</input>
+    		</generator>
+			</input>
+			<input into="account">
+				<datastore access="3">accounts</datastore>
+			</input>
+			<input into="leaked_filename">
+				<value>.dempwnies.pcap</value>
+			</input>
+		</vulnerability>
+
+		<!-- Release zip file -->
+		<vulnerability type="zip_file">
+			<input into="base64_file">
+				<generator type="zip_file_generator">
+      		<input into="password">
+        		<generator type="jtr_password"/>
+      		</input>
+					<input into="strings_to_leak">
+						<generator type="netlab_flag"/>
+						<value>
+							Congratulations you have cracked our protected zip file. We wish there was more information here but we are just not that smart. Here is a flag for your troubles. Oh and don't forget: Is all network traffic properly erased? .pcap files contain more information than we originally thought.
+						</value>
+					</input>
+    		</generator>
+			</input>
+
+			<input into="account">
+				<datastore access="3">accounts</datastore>
+			</input>
+
+			<input into="leaked_filename">
+				<value>.protected.zip</value>
+			</input>
+		</vulnerability>
+
+		<network module_path=".*private_network_4"/>
+
+		<!-- Cleanup system, and set root password of system -->
+		<build type="cleanup">
+      <input into="root_password">
+        <generator type=".*strong_password.*"/>
+      </input>
+    </build>
+
+	</system>
+
+</scenario>

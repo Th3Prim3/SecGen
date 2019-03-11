@@ -3,11 +3,11 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://www.github/cliffe/SecGen/vulnerability">
 
-  <name>Secret Agent Database</name>
+  <name>Pwny Online Store</name>
   <author>Jason Zeller</author>
   <author>Chris Jacobs</author>
   <module_license>MIT</module_license>
-  <description>A conspiracy secret agent database.</description>
+  <description>A online store for the Pwnable Pwnies.</description>
 
   <type>webapp</type>
   <privilege>info_leak</privilege>
@@ -19,7 +19,6 @@
   <read_fact>db_password</read_fact>
   <read_fact>accounts</read_fact>
   <read_fact>domain</read_fact>
-  <read_fact>agents</read_fact>
 
   <default_input into="port">
     <value>80</value>
@@ -106,12 +105,6 @@
         <value>*D03F2141E072304885CF0BB96B8E93B2F2F079E5</value>
       </input>
     </generator>
-  </default_input>
-
-  <default_input into="agents">
-    <generator type="person"/>
-    <generator type="person"/>
-    <generator type="person"/>
   </default_input>
 
   <default_input into="domain">

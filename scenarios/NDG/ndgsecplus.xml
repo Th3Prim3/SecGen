@@ -127,6 +127,11 @@
 			<input into="agents">
 				<datastore>agents</datastore>
 			</input>
+			<input into="strings_to_leak">
+				<generator type="netlab_flag"/>
+				<generator type="netlab_flag"/>
+				<generator type="netlab_flag"/>
+			</input>
 		</vulnerability>
 
 
@@ -164,7 +169,7 @@
 				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
 				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
 				<value>Here is a flag for finding this message:</value>
-				<generator type="flag_generator"/>
+				<generator type="netlab_flag"/>
 			</input>
 			<input into="account">
 				<generator type="account">
@@ -199,12 +204,26 @@
 				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
 				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
 				<value>Here is a flag for finding this message:</value>
-				<generator type="flag_generator"/>
+				<generator type="netlab_flag"/>
 			</input>
 		</vulnerability>
 
 		<!-- Release pcap file -->
-		<vulnerability type="pcap"/>
+		<vulnerability type="pcap">
+			<input into="account">
+				<datastore access="2">accounts</datastore>
+			</input>
+			<input into="leaked_filename">
+				<value>suspicious_capture.pcap</value>
+			</input>
+			<input into="base64_file">
+				<generator type="pcap_generator">
+					<input into="strings_to_leak">
+						<generator type="netlab_flag"/>
+					</input>
+				</generator>
+			</input>
+		</vulnerability>
 
 		<!-- Create non-vagrant network -->
 		<network module_path=".*private_network_1"/>
@@ -212,8 +231,7 @@
 		<!-- Cleanup system, and set root password of system -->
 		<build type="cleanup">
       <input into="root_password">
-        <!-- <generator type=".*strong_password.*"/> -->
-				<value>Train1ng$</value>
+        <generator type=".*strong_password.*"/>
       </input>
     </build>
 

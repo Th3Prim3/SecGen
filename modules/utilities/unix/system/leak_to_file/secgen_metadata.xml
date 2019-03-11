@@ -21,11 +21,11 @@
   <read_fact>account</read_fact>
 
   <default_input into="leaked_filename">
-    <value>leaked.log</value>
+    <value/>
   </default_input>
 
   <default_input into="base64_file">
-    <generator type="pcap_generator"/>
+    <value/>
   </default_input>
 
   <default_input into="storage_directory">

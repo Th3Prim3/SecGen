@@ -139,7 +139,7 @@
 				<value>So, you think you are an expert huh? I wonder if you can figure out my password.</value>
 				<value>This account password is also a flag. For example, if the password is "123456" the flag is: flag{123456}</value>
 				<value>Here is a flag for finding this message:</value>
-				<generator type="flag_generator"/>
+				<generator type="netlab_flag"/>
 			</input>
 		</vulnerability>
 
@@ -151,7 +151,7 @@
 				<value>lookylooky</value>
 			</input>
 			<input into="strings_to_leak">
-        <generator type="flag_generator"/>
+        <generator type="netlab_flag"/>
         <value>Make a note of the technique used to solve this challenge as it will come in handy again soon.</value>
       </input>
     </vulnerability>
@@ -164,6 +164,11 @@
 			</input>
 			<input into="domain">
 				<datastore>store_domain</datastore>
+			</input>
+			<input into="strings_to_leak">
+				<generator type="netlab_flag"/>
+				<generator type="netlab_flag"/>
+				<generator type="netlab_flag"/>
 			</input>
 		</vulnerability>
 

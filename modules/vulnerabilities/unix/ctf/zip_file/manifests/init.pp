@@ -1,4 +1,4 @@
-class pcap_file::init {
+class zip_file::init {
   $secgen_parameters = secgen_functions::get_parameters($::base64_inputs_file)
 
   $leaked_filename = $secgen_parameters['leaked_filename'][0]

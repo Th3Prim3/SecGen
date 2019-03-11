@@ -13,7 +13,7 @@ class leak_to_file::init {
     $storage_directory = $secgen_parameters['storage_directory'][0]
   }
 
-  leak_to_file::leak_file { $leaked_filename:
+  leak_to_file::leak_file { '$storage_directory/$leaked_filename':
     leaked_filename => $leaked_filename,
     storage_directory => $storage_directory,
     base64_file => $base64_file,
